@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<head>
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <!-- <script src="ejs.js"></script> -->
+  <title>Stock stuff</title>
+</head>
+
+<body>
+  <!-- APP CONTENT -->
+
+  <div class="container my-4 text-center">
+   <!--  <div class="btn-toolbar float-right my-2">
+      <a href="file" class="btn btn-outline-success" role="button">
+        <span class="octicon octicon-cloud-upload mr-sm-2"></span>Upload
+      </a>
+    </div> -->
+    <h2><%= title %></h2>
+    <hr/>
+
+  </div>
+
+
+<div class="container">
+  <form id="upload" class="uploadForm" action="/upload" method="POST"> 
+
+
+      <div class="form-group row">
+        <label for="stock[]" class="col-sm-2 col-form-label">Stock Name</label>
+        <div class="col-sm-4">
+          <input name="stock[]" type="text" class="form-control form-control-text" placeholder="AAPL">
+        </div>
+
+        <label for="shares[]" class="col-sm-2 col-form-label">Shares</label>
+        <div class="col-sm-4">
+          <input name="shares[]" type="text" class="form-control form-control-number" placeholder="200">
+        </div>
+      </div>
+
+      <button type="button" onclick="loadNew()">Add</button>
+      <button type="button" onclick="removeNew()">Remove</button>
+     <!--  <div class="form-group row">
+        <label for="prof" class="col-sm-2 col-form-label">Professor</label>
+        <div class="col-sm-10">
+          <input name="prof" type="text" class="form-control form-control-text" id="prof" placeholder="David Smallberg">
+        </div>
+      </div> -->
+
+      <button id="submit" class="btn btn-primary mb-2">Submit</button>
+    </form>
+
+  </div>
+
+<script>
+function loadNew()
+{
+  $.get('/newStock', function(data) {
+    $('.form-group').last().after(data);
+  });
+}
+function removeNew()
+{
+  if($('.form-group').length==1) return;
+  $('.form-group').last().remove();
+}
+</script>
+
+</body>
