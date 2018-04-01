@@ -62,13 +62,6 @@ function getTweets(){
 					wtd_total += sentiment * wt;
 					total_wt += wt;
 				*/
-				
-				/*
-					.created_at
-					.truncated (bool)
-					.user[id/id_str/name/screen_name/location/description/followers_count/friends_count]
-					.retweet_count
-				*/
 			}
 		//var total_sentiment = wtd_total / total_wt;
 		//total_sentiments[k] = total_sentiment;
