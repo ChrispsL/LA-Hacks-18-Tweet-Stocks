@@ -35,6 +35,7 @@ app.get('/newStock', (req, res) => {
 	res.render('partials/StockForm')
 });
 
+var decisions = 0;
 // Call on form submit. GET Blackrock's data on the company, render a new page with graphs and tweets and stuff
 app.post('/upload', (req, res) => {
 	
@@ -73,6 +74,23 @@ app.post('/upload', (req, res) => {
 	var performanceURL = 'https://www.blackrock.com/tools/hackathon/performance?identifiers='
 	performanceURL += companies.join(',');
 	// console.log(performanceURL);
+
+
+	var companyNames;
+    https.get("https://www.blackrock.com/tools/hackathon/search-securities?identifiers=" + companies.join(','), (res)=> {
+        res.setEncoding('utf8');
+        let body = "";
+        res.on("data", data => { body += data });
+        res.on("end", () => {
+            body = JSON.parse(body);
+
+            companyNames = body.resultMap.SEARCH_RESULTS[0].resultList.map(function(list, l){ return [list.description]; });
+			getTweets(companyNames, companies);
+        });
+    });
+    console.log("company names are " + companyNames);
+
+
 	https.get(performanceURL, (response) => {
 		response.setEncoding('utf8');
 		let body = "";
@@ -83,7 +101,6 @@ app.post('/upload', (req, res) => {
 			// Done fetching the data, operate on data and return the different graph datas
 
 			// console.log(body.resultMap);
-			var decisions = 0;
 			graphCompanies = body.resultMap.RETURNS.map(function(returns, l) {
 				var levels = returns.performanceChart.map(function(point) { return [point[0], point[1] * 1]; });
 				var ema12 = movingAverage(12, levels);
@@ -183,36 +200,35 @@ app.post('/upload', (req, res) => {
 			// console.log(JSON.stringify(graphCompanies[0]));
 			// console.log(graphCompanies[0][2][0].interval);
 			//res.render("graph", {ss: graphCompanies, dec: decisions});
-			res.render("analysis", {graphs: graphCompanies});
+			res.render("analysis", {graphs: graphCompanies, });
 		});
 
 		
 	});
-
-	console.log(req.body);
-	
-	//getTweets(companies);
 });
 
 // // // // // Functions // // // // //
 
 //store top url for each company
 var top_urls = {};
+//store the last 5 sentiments. we'll check the most recent with the least recent. if big difference, do something
+var sentiments = {};
 
 var iteration = 0;
-function getTweets(companies){
+function getTweets(companies, abbrevs){
 	var top_url = {};
 	console.log(companies.length);
 	for (var k = 0; k < companies.length; k++){
-		console.log("SEARCHING TWITTER FOR " + companies[k]);
+		var company_name = companies[k];
+		var abbrev = abbrevs[k];
+		console.log("SEARCHING TWITTER FOR " + company_name);
 		console.log( moment().subtract(7, 'd').format('YYYY-MM-DD'));
-		T.get('search/tweets', { q: companies[k] + ' since:' + moment().subtract(7, 'd').format('YYYY-MM-DD'), count: 100}, (err, data, response) => {
+		T.get('search/tweets', { q: company_name + ' since:' + moment().subtract(7, 'd').format('YYYY-MM-DD') + '&result_type=popular', count: 100}, (err, data, response) => {
 			console.log(" ");
 			console.log("ITERATION NUMBER " + iteration + " WITH " + data.statuses.length + " TWEETS");
 			console.log(" ");
 			iteration++;
 			var DATA = {};
-			DATA["company"] = companies[k];
 			var TWEETS = [];
 			//loop through all the tweets
 			for(var i=0; i < data.statuses.length; i++)
@@ -223,11 +239,11 @@ function getTweets(companies){
 				if (data.statuses[i].metadata.iso_language_code != "en")
 					continue; //if not english, skip it
 
-				console.log(data.statuses[i].text);
-				console.log(data.statuses[i].user.screen_name + " has " + data.statuses[i].user.followers_count + " followers");
-				if (data.statuses[i].truncated == true)
-					console.log("TRUNCATED");
-				console.log("------------------------------------");
+				//console.log(data.statuses[i].text);
+				//console.log(data.statuses[i].user.screen_name + " has " + data.statuses[i].user.followers_count + " followers");
+				//if (data.statuses[i].truncated == true)
+				//	console.log("TRUNCATED");
+				//console.log("------------------------------------");
 
 				var TWEETOBJ = {"followers": data.statuses[i].user.followers_count, 
 					"retweets": data.statuses[i].retweet_count, "text": data.statuses[i].text};
@@ -236,7 +252,7 @@ function getTweets(companies){
 				//check if top_url should be overwritten
 				if (data.statuses[i].user.followers_count > top_url["followers"]){
 					top_url["followers"] = data.statuses[i].user.followers_count;
-					top_three[k]["followers"] = data.statuses[i].user.followers_count;
+					top_url[k]["followers"] = data.statuses[i].user.followers_count;
 					/*if (typeof(data.statuses[i].entities.urls[0].url) == "string")
 						top_three[k]["url"] = data.statuses[i].entities.urls[0].url;
 					else
@@ -247,12 +263,56 @@ function getTweets(companies){
 				//console.log(JSON.stringify(data.statuses[i].entities.urls));
 				//console.log(JSON.stringify(top_three));
 			}
+			DATA["company"] = abbrev;
+			console.log("abbrev sent was " + abbrev);
 			DATA["tweets"] = TWEETS;
 			//pretty printing
-			//console.log(JSON.stringify(DATA, null, 2));
+			console.log(JSON.stringify(DATA, null, 2));
+
+			var request = require("request");
+
+			var options = { method: 'POST',
+				url: 'http://10.30.13.138:5000/sentiment',
+			    //url: 'https://topguns-lahacks.appspot.com/sentiment',
+			  headers: 
+			   { 'Postman-Token': 'a531e8c1-122d-4e34-a5c0-18ef2381ce0f',
+			     'Cache-Control': 'no-cache',
+			     'Content-Type': 'application/json' },
+			  body: DATA,
+			  json: true };
+
+			  request(options, function (error, response, body) {
+			  if (error) throw new Error(error);
+
+			  console.log("HERE IS THE RESPONSE: " + JSON.stringify(body, null, 2));
+
+			  //NOW WE PROCESS THE RESPONSE INCLUDING SENTIMENT
+			  //if it hasnt been filled, fill it with zeros
+			  if (sentiments[body["company"]] == null){
+			  	sentiments[body["company"]] = [];
+			  	for (var l = 0; l < 5; l++){
+			  		sentiments[body["company"]].push(0);
+			  	}
+			  }
+
+			  for (var j = 0; j < 5; j++){
+			  	if (/*(body["sentiment"] > 25 && sentiments[body["company"]][j] < 0) ||*/ (body["sentiment"] < -25 && sentiments[body["company"]][j] > 0)){
+			  		//DO SOMETHING!!!!!
+			  		///////////////////////
+			  		///////////////////////
+			  		///////////////////////
+			  	}
+			  }
+
+			  //shift values over
+			  for (var j = 4; j > 0; j--)
+			  	sentiments[body["company"]][j] = sentiments[body["company"]][j - 1];
+			  sentiments[body["company"]][0] = body["sentiment"];
+			});
+
 		})
 	}
-	setTimeout(function(){getTweets(companies);}, 20000);
+	setTimeout(function(){getTweets(companies, abbrevs);}, 20000);
 };
 
 function movingAverage(period, data)

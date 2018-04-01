@@ -54,6 +54,8 @@ h1{
 }
 
 #charts{
+	background: blue;
+	padding-left: 100px;
 }
 
 #sentiments{
