@@ -14,11 +14,27 @@ body{
 .bg{
 	width: 100%;
 	z-index: -1;
+	top: -25%;
+	margin-bottom: 10%;
 	position: absolute;
 }
 
+#title{
+	margin: 0 15%;
+}
+
+h1{
+	font-family: "CenturyGothic";
+	letter-spacing: 12px;
+	font-size: 40px;
+	margin-top: 6%;
+}
+
 .mg{
-	margin-bottom: 5%;
+	font-size: 22px;
+	margin-bottom: 2%;
+	letter-spacing: 3px;
+	font-family: "MyriadPro";
 }
 
 #portfolio{
@@ -27,20 +43,39 @@ body{
 #suggestions{
 	text-align: left;
 	font-family: "CenturyGothic";
-	font-size: 38px;
-	letter-spacing: 5px;
-	margin: 20% 0;
+	margin: 3% 0;
 
 }
 
 .suggest{
 	font-size: 25px;
 	letter-spacing: 3px;
-	margin: 5% 0;
+	margin: 3% 0;
 }
 
 #charts{
 }
 
 #sentiments{
+}
+
+@media (max-width: 768px){
+	.mg{
+		font-size: 15px;
+		margin-bottom: 2%;
+		letter-spacing: 1px;
+		font-family: "MyriadPro";
+	}
+	.suggest{
+		font-size: 18px;
+		letter-spacing: 1.5px;
+		margin: 3% 0;
+	}
+	.bg{
+		top: 0;
+	}
+	h1{
+		font-size: 28px;
+		letter-spacing: 6px;
+	}
 }

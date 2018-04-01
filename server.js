@@ -35,15 +35,24 @@ var threshold = 0.5;
 var companies = new Array();
 var total_sentiments = new Array();
 
+//store top url for each company
+var top_urls = {};
+
 var iteration = 0;
 function getTweets(){
+	var top_url = {};
 	for (var k = 0; k < companies.length; k++){
 		console.log("SEARCHING TWITTER FOR " + companies[k]);
+		//store top three urls with most followers. initialize them to 0 followers so anything will beat them
 		T.get('search/tweets', { q: companies[k] + ' since:2018-03-24', count: 100}, (err, data, response) => {
 			console.log(" ");
 			console.log("ITERATION NUMBER " + iteration + " WITH " + data.statuses.length + " TWEETS");
 			console.log(" ");
 			iteration++;
+			var DATA = {};
+			DATA["company"] = companies[k];
+			var TWEETS = [];
+			//loop through all the tweets
 			for(var i=0; i < data.statuses.length; i++)
 			{
 				//filter for english only posts
@@ -56,18 +65,29 @@ function getTweets(){
 				console.log(data.statuses[i].user.screen_name + " has " + data.statuses[i].user.followers_count + " followers");
 				if (data.statuses[i].truncated == true)
 					console.log("TRUNCATED");
-				//console.log("language is " + data.statuses[i].metadata.iso_language_code);
 				console.log("------------------------------------");
 
-				var wt = data.statuses[i].user.followers_count;
-				//TODO: GET SENTIMENT
-				/*
-					wtd_total += sentiment * wt;
-					total_wt += wt;
-				*/
+				var TWEETOBJ = {"followers": data.statuses[i].user.followers_count, 
+					"retweets": data.statuses[i].retweet_count, "text": data.statuses[i].text};
+				TWEETS.push(TWEETOBJ);
+
+				//check if top_url should be overwritten
+				if (data.statuses[i].user.followers_count > top_url["followers"]){
+					top_url["followers"] = data.statuses[i].user.followers_count;
+					top_three[k]["followers"] = data.statuses[i].user.followers_count;
+					/*if (typeof(data.statuses[i].entities.urls[0].url) == "string")
+						top_three[k]["url"] = data.statuses[i].entities.urls[0].url;
+					else
+						top_three[k]["url"] = "";*/
+					break;
+				}
+				//console.log(JSON.stringify(data.statuses[i].entities));
+				//console.log(JSON.stringify(data.statuses[i].entities.urls));
+				//console.log(JSON.stringify(top_three));
 			}
-		//var total_sentiment = wtd_total / total_wt;
-		//total_sentiments[k] = total_sentiment;
+			DATA["tweets"] = TWEETS;
+			//pretty printing
+			//console.log(JSON.stringify(DATA, null, 2));
 		})
 	}
 	setTimeout(getTweets, 20000);

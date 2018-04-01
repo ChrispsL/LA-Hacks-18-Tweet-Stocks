@@ -4,12 +4,11 @@
 body{
 	margin-top: 10%;
 	font-family: "MyriadPro";
-	overflow: hidden;
 }
 
 .bg{
 	position: absolute;
-	top: 0%;
+	top: -12%;
 	width: 100%;
 	z-index: -1;
 }

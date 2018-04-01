@@ -10,8 +10,13 @@
 
 <body>
 
-  	<img class="bg" src="/img.jpg">
+  	<img class="bg" src="/img2.png">
 
+  	<div id="title" class="text-center">
+	    <h1>PORTFOLIO ANALYSIS</h1>
+	    <hr/>
+	</div>
+	
 	<div class="row">
 		<div class="col-md-6 col-sm-12" id="portfolio">
 			<!--pie chart of portfolio-->
@@ -21,25 +26,66 @@
 			<!--we suggest you-->
 			<div class="col-sm-2"></div>
 			<div class="col-sm-4">
-				<h2 class="mg">FOR YOUR INVESTMENT IN</h2>
+				<h2 class="mg">for your investment in</h2>
 				<!-- LOOP HERE -->
-				<p class="suggest">APPLE</p>
-				<p class="suggest">MICROSOFT</p>
-				<p class="suggest">ADOBE</p>
+				<hr><p class="suggest">APPLE</p>
+				<hr><p class="suggest">MICROSOFT</p>
+				<hr><p class="suggest">ADOBE</p>
+				<hr>
 			</div>
 			<div class="col-sm-4">
-				<h2 class="mg">WE SUGGEST THAT YOU</h2>
+				<h2 class="mg">we suggest that you</h2>
 				<!-- LOOP HERE -->
-				<p class="suggest">HOLD</p>
-				<p class="suggest">SELL, STRONGLY</p>
-				<p class="suggest">BUY</p>
+				<hr><p class="suggest HOLD">-</p>
+				<hr><p class="suggest SELL">SELL, STRONGLY</p>
+				<hr><p class="suggest BUY">-</p>
+				<hr>
 			</div>
 			<div class="col-sm-2"></div>
 		</div>
 
 		<div class="row">
 			<div class="col-md-6 col-sm-12" id="charts">
-				<!--EMA Graphs-->
+				<!--Graphs-->
+				<h1>TECHNICAL ANALYSIS</h1>
+				<div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+				  <!-- Wrapper for slides -->
+				  <div class="carousel-inner">
+
+					<div class="item active">
+				    	<div class="dsp container">
+							<div class="graphic"><img class="graphic" src="Graphics/dsp.png" alt=""></div>
+							<h2>COMPANY NAME</h2>
+							<p class="desc">1/2018 | The graphic for a service event hosted by UCLA Circle K with attendees from several clubs in the LA area. </p>
+				    	</div>
+				    </div>
+
+			    </div>
+
+				  <!-- Indicators -->
+				  <ol class="carousel-indicators">
+				    <!--<li data-target="#myCarousel" data-slide-to="0" class="active"></li>-->
+				  </ol>
+
+				  <!-- Left and right controls -->
+				  <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+				    <span class="glyphicon glyphicon-chevron-left"></span>
+				    <span class="sr-only">Previous</span>
+				  </a>
+				  <a class="right carousel-control" href="#myCarousel" data-slide="next">
+				    <span class="glyphicon glyphicon-chevron-right"></span>
+				    <span class="sr-only">Next</span>
+				  </a>
+				</div>
+				
+
+				<script>
+					$('.carousel').carousel({
+					  interval: 2000 * 10
+					});
+				</script>
+
 			</div>
 
 			<div class="col-md-6 col-sm-12" id="sentiments">
