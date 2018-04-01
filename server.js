@@ -24,6 +24,8 @@ app.get('/newStock', (req, res) => {
 	res.render('partials/StockForm')
 });
 
+app.use(express.static('public'));
+
 
 
 //if changes by threshold within some time interval, alert
