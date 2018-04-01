@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <head>
   <!-- Bootstrap CSS CDN -->
-  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.css" rel="stylesheet"> -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
@@ -17,29 +17,59 @@
   </div>
   <div id="container2">
   </div>
+  <div id="container3">
+  </div>
+  <div id="decisions"><%= JSON.stringify(dec) %></div>
 
 <script>
-Highcharts.stockChart('container', {
-rangeSelector: {
-	selected: 5
-},
+  <% ss.forEach(function(graphs) { %>
+    intervals = Highcharts.stockChart('container', {
+      rangeSelector: {
+        selected: 5
+      },
 // yAxis: { tickInterval: 0.001 },
 chart: {height: 600},
 title: {
-	text: "Graph"
+  text: "Graph"
 },
-series: <%- JSON.stringify(ss) %>
+navigator: { enabled: false },
+series: <%- JSON.stringify(graphs[0]) %>
 });
 
-Highcharts.stockChart('container2', {
-rangeSelector: {
-	selected: 5
-},
-title: {
-	text: "Graph"
-},
-series: <%- JSON.stringify(ss2) %>
-});
+    emas = Highcharts.stockChart('container2', {
+      rangeSelector: {
+        selected: 5
+      },
+      title: {
+        text: "Graph"
+      },
+      navigator: { enabled: false },
+      series: <%- JSON.stringify(graphs[1]) %>
+    });
+
+    macd = Highcharts.stockChart('container3', {
+      rangeSelector: {
+        selected: 5
+      },
+      title: {
+        text: "Graph"
+      },
+     yAxis: { plotLines: [{
+        color: '#000000',
+        value: <%- JSON.stringify(graphs[2][0].interval) %>
+      }, {
+        color: '#000000',
+        value: <%- JSON.stringify(-graphs[2][0].interval) %>
+      }]},
+      series: <%- JSON.stringify(graphs[2]) %>
+    });
+    <% }); %>
+
+  $('#container3').mouseup(function(event) {
+    var x = macd.xAxis[0].getExtremes();
+    intervals.xAxis[0].setExtremes(x.min, x.max, true, false);
+    emas.xAxis[0].setExtremes(x.min, x.max, true, false);
+  });
 </script>
 
 </body>
