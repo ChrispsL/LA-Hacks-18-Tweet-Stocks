@@ -1,3 +1,56 @@
+@font-face{font-family: 'MyriadPro'; src: url(/MyriadPro-Regular.otf) format('opentype');}
+@font-face{font-family: 'CenturyGothic'; src: url(/CenturyGothic.ttf) format('truetype');}
+
 body{
-	background: yellow;
+  margin-top: 10%;
+  font-family: "MyriadPro";
+}
+
+.bg{
+	position: absolute;
+	top: -12%;
+	width: 100%;
+	z-index: -1;
+}
+
+h2{
+	font-family: "CenturyGothic";
+	letter-spacing: 12px;
+	font-size: 40px;
+}
+
+hr{
+	border: none;
+    height: 1px;
+    /* Set the hr color */
+    color: #333; /* old IE */
+    background-color: #333; /* Modern Browsers */
+}
+
+.container{
+	font-size: 20px;
+}
+
+#submit{
+  	border-width: 2px;
+  	border-color: #666;
+	background: #666;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	transition: 0.3s ease;
+}
+
+.navbar-default .navbar-nav li a:hover{
+	color: #72191b;#submit
+.empty{
+  border-width: 2px;
+  border-color: #666;
+  background-color: Transparent;
+  color: #666;
+}
+
+.form-control{
+  color: black;
 }

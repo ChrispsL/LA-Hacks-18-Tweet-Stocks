@@ -9,29 +9,11 @@
 
   <!-- <script src="ejs.js"></script> -->
   <title>Stock stuff</title>
-
-  <style type="text/css">
-    @font-face{font-family: 'MyriadPro'; src: url(Fonts/MyriadPro-Regular.otf) format('opentype');}
-
-    body{
-      margin-top: 10%;
-    }
-
-    .empty{
-      border-width: 2px;
-      border-color: #3366ff;
-      color: #3366ff;
-      background: white;
-    }
-
-    .form-control{
-      color: black;
-    }
-  </style>
 </head>
 
 <body>
   <!-- APP CONTENT -->
+  <img class="bg" src="/img.jpg">
 
   <div class="container my-4 text-center">
    <!--  <div class="btn-toolbar float-right my-2">
@@ -47,32 +29,32 @@
 
 <div class="container">
   <form id="upload" class="uploadForm" action="/upload" method="POST"> 
-
-      <div class="form-group row">
-        <label for="stock[]" class="col-sm-2 col-form-label">Symbol</label>
-        <div class="col-sm-4">
-          <input name="stock[]" type="text" class="form-control form-control-text" placeholder="AAPL">
-        </div>
-
-        <label for="shares[]" class="col-sm-2 col-form-label"># Shares</label>
-        <div class="col-sm-4">
-          <input name="shares[]" type="text" class="form-control form-control-number" placeholder="10">
-        </div>
+ 
+    <div class="form-group row">
+      <label for="stock[]" class="col-sm-2 col-form-label">Symbol</label>
+      <div class="col-sm-4">
+        <input name="stock[]" type="text" class="form-control form-control-text" placeholder="AAPL">
       </div>
 
-      <button type="button" class="btn empty mb-2" onclick="loadNew()">Add</button>
-      <button type="button" class="btn empty mb-2" onclick="removeNew()">Remove</button>
-     <!--  <div class="form-group row">
-        <label for="prof" class="col-sm-2 col-form-label">Professor</label>
-        <div class="col-sm-10">
-          <input name="prof" type="text" class="form-control form-control-text" id="prof" placeholder="David Smallberg">
-        </div>
-      </div> -->
+      <label for="shares[]" class="col-sm-2 col-form-label"># Shares</label>
+      <div class="col-sm-4">
+        <input name="shares[]" type="text" class="form-control form-control-number" placeholder="10">
+      </div>
+    </div>
 
-      <button id="submit" class="btn btn-primary mb-2">Submit</button>
-    </form>
+    <button type="button" class="btn empty mb-2" onclick="loadNew()">Add</button>
+    <button type="button" class="btn empty mb-2" onclick="removeNew()">Remove</button>
+   <!--  <div class="form-group row">
+      <label for="prof" class="col-sm-2 col-form-label">Professor</label>
+      <div class="col-sm-10">
+        <input name="prof" type="text" class="form-control form-control-text" id="prof" placeholder="David Smallberg">
+      </div>
+    </div> -->
 
-  </div>
+    <button id="submit" class="btn btn-primary mb-2">Submit</button>
+  </form>
+
+</div>
 
 <script>
 function loadNew()

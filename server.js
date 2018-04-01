@@ -17,7 +17,7 @@ app.use(express.urlencoded( { extended: false }));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-	res.render("index", {title: "Stocks"});
+	res.render("index", {title: "ENTER YOUR WATCHLIST"});
 });
 
 app.get('/newStock', (req, res) => {
@@ -75,7 +75,7 @@ function getTweets(){
 app.post('/upload', (req, res) => {
 	// Process
 	console.log(req.body);
-	res.render("index", {title: "Stocks"});
+	res.render("index", {title: "ENTER YOUR WATCHLIST"});
 
 
 	var num_companies = 0;
