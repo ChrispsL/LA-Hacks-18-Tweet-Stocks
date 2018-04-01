@@ -1,0 +1,46 @@
+@font-face{font-family: 'MyriadPro'; src: url(/MyriadPro-Regular.otf) format('opentype');}
+@font-face{font-family: 'CenturyGothic'; src: url(/CenturyGothic.ttf) format('truetype');}
+
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body{
+	margin: 0;
+	padding: 0;
+}
+
+.bg{
+	width: 100%;
+	z-index: -1;
+	position: absolute;
+}
+
+.mg{
+	margin-bottom: 5%;
+}
+
+#portfolio{
+}
+
+#suggestions{
+	text-align: left;
+	font-family: "CenturyGothic";
+	font-size: 38px;
+	letter-spacing: 5px;
+	margin: 20% 0;
+
+}
+
+.suggest{
+	font-size: 25px;
+	letter-spacing: 3px;
+	margin: 5% 0;
+}
+
+#charts{
+}
+
+#sentiments{
+}

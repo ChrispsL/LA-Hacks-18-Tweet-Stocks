@@ -38,6 +38,7 @@ var total_sentiments = new Array();
 var iteration = 0;
 function getTweets(){
 	for (var k = 0; k < companies.length; k++){
+		console.log("SEARCHING TWITTER FOR " + companies[k]);
 		T.get('search/tweets', { q: companies[k] + ' since:2018-03-24', count: 100}, (err, data, response) => {
 			console.log(" ");
 			console.log("ITERATION NUMBER " + iteration + " WITH " + data.statuses.length + " TWEETS");
@@ -75,7 +76,7 @@ function getTweets(){
 app.post('/upload', (req, res) => {
 	// Process
 	console.log(req.body);
-	res.render("index", {title: "ENTER YOUR WATCHLIST"});
+	res.render("analysis");
 
 
 	var num_companies = 0;

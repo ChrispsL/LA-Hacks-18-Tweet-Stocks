@@ -2,13 +2,14 @@
 @font-face{font-family: 'CenturyGothic'; src: url(/CenturyGothic.ttf) format('truetype');}
 
 body{
-  margin-top: 10%;
-  font-family: "MyriadPro";
+	margin-top: 10%;
+	font-family: "MyriadPro";
+	overflow: hidden;
 }
 
 .bg{
 	position: absolute;
-	top: -12%;
+	top: 0%;
 	width: 100%;
 	z-index: -1;
 }
@@ -33,22 +34,35 @@ hr{
 
 #submit{
   	border-width: 2px;
-  	border-color: #666;
-	background: #666;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	-ms-transition: all 0.3s ease-out;
-	transition: 0.3s ease;
+  	border-color: #555;
+	background: #555;
+	-webkit-transition: all 0.5s ease-out;
+	-moz-transition: all 0.5s ease-out;
+	-o-transition: all 0.5s ease-out;
+	-ms-transition: all 0.5s ease-out;
+	transition: 0.5s ease;
 }
 
-.navbar-default .navbar-nav li a:hover{
-	color: #72191b;#submit
+#submit:hover{
+  	border-color: #999;
+	background: #999;
+}
+
 .empty{
-  border-width: 2px;
-  border-color: #666;
-  background-color: Transparent;
-  color: #666;
+	border-width: 2px;
+	border-color: #555;
+	background-color: Transparent;
+	color: #555;
+	-webkit-transition: all 0.4s ease-out;
+	-moz-transition: all 0.4s ease-out;
+	-o-transition: all 0.4s ease-out;
+	-ms-transition: all 0.4s ease-out;
+	transition: 0.4s ease;
+}
+
+.empty:hover{
+	border-color: #999;
+	color: #999;
 }
 
 .form-control{
