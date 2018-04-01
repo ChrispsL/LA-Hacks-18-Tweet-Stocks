@@ -34,17 +34,17 @@
 			<div class="col-sm-4">
 				<h2 class="mg">for your investment in</h2>
 				<!-- LOOP HERE -->
-				<hr><p class="suggest">APPLE</p>
-				<hr><p class="suggest">MICROSOFT</p>
-				<hr><p class="suggest">ADOBE</p>
+				<% nameDatas.names.forEach(function(name, i) { %>
+				<hr><p class="suggest"><%=name%></p>
+				<% }); %>
 				<hr>
 			</div>
 			<div class="col-sm-4">
 				<h2 class="mg">we suggest that you</h2>
 				<!-- LOOP HERE -->
-				<hr><p class="suggest HOLD">-</p>
-				<hr><p class="suggest SELL">SELL, STRONGLY</p>
-				<hr><p class="suggest BUY">-</p>
+				<% nameDatas.decision.forEach(function(dec, i) { %>
+				<hr><p class="suggest <%=dec%>"><%=dec%></p>	<!-- HOLD, SELL, BUY -->
+				<% }); %>
 				<hr>
 			</div>
 			<div class="col-sm-2"></div>
@@ -73,18 +73,20 @@
 				   </div>
 
 				  <!-- Indicators -->
-				 <!--  <ol class="carousel-indicators">
-				    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-				  </ol> -->
+				  <ol class="carousel-indicators">
+				  		<% for(var i=0; i < graphs.length; i++) { %>
+				    <li data-target="#myCarousel" data-slide-to="<%=i%>" class="active"></li>
+				    <% } %>
+				  </ol>
 
 				  <!-- Left and right controls -->
-				 <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+				 <!-- <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
 					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 					<span class="sr-only">Previous</span>
 				</a>
 				<a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
 					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="sr-only">Next</span>
+					<span class="sr-only">Next</span> -->
 				</div>
 				
 
@@ -106,7 +108,7 @@
 
 	<script>
 		<% graphs.forEach(function(graph, i) { %>
-			intervals = Highcharts.stockChart('graph1-<%=i%>', {
+			intervals<%=i%> = Highcharts.stockChart('graph1-<%=i%>', {
 				rangeSelector: {
 					selected: 5
 				},
@@ -118,7 +120,7 @@
 				series: <%- JSON.stringify(graph[0]) %>
 			});
 
-			emas = Highcharts.stockChart('graph2-<%=i%>', {
+			emas<%=i%> = Highcharts.stockChart('graph2-<%=i%>', {
 				rangeSelector: {
 					selected: 5
 				},
@@ -129,7 +131,7 @@
 				series: <%- JSON.stringify(graph[1]) %>
 			});
 
-			macd = Highcharts.stockChart('graph3-<%=i%>', {
+			macd<%=i%> = Highcharts.stockChart('graph3-<%=i%>', {
 				rangeSelector: {
 					selected: 5
 				},
@@ -145,13 +147,14 @@
 				}]},
 				series: <%- JSON.stringify(graph[2]) %>
 			});
-			<% }); %>
+			
 
-		$('#graph1-<%=i%>').mouseup(function(event) {
-			var x = macd.xAxis[0].getExtremes();
-			intervals.xAxis[0].setExtremes(x.min, x.max, true, false);
-			emas.xAxis[0].setExtremes(x.min, x.max, true, false);
+		$('#graph3-<%=i%>').mouseup(function(event) {
+			var x = macd<%=i%>.xAxis[0].getExtremes();
+			intervals<%=i%>.xAxis[0].setExtremes(x.min, x.max, true, false);
+			emas<%=i%>.xAxis[0].setExtremes(x.min, x.max, true, false);
 		});
+		<% }); %>
 	</script>
 
 	</script>

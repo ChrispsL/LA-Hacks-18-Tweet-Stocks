@@ -35,7 +35,6 @@ app.get('/newStock', (req, res) => {
 	res.render('partials/StockForm')
 });
 
-var decisions = 0;
 // Call on form submit. GET Blackrock's data on the company, render a new page with graphs and tweets and stuff
 app.post('/upload', (req, res) => {
 	
@@ -75,7 +74,6 @@ app.post('/upload', (req, res) => {
 	performanceURL += companies.join(',');
 	// console.log(performanceURL);
 
-
 	var companyNames;
     https.get("https://www.blackrock.com/tools/hackathon/search-securities?identifiers=" + companies.join(','), (res)=> {
         res.setEncoding('utf8');
@@ -83,12 +81,12 @@ app.post('/upload', (req, res) => {
         res.on("data", data => { body += data });
         res.on("end", () => {
             body = JSON.parse(body);
+            // if(~body.resultMap.SEARCH_RESULTS[0].resultList) return;
 
-            companyNames = body.resultMap.SEARCH_RESULTS[0].resultList.map(function(list, l){ return [list.description]; });
-			getTweets(companyNames, companies);
+           	companyNames = body.resultMap.SEARCH_RESULTS[0].resultList.map(function(list, l){ return [list.description]; });
+			//getTweets(companyNames, companies);
         });
     });
-    console.log("company names are " + companyNames);
 
 
 	https.get(performanceURL, (response) => {
@@ -97,10 +95,12 @@ app.post('/upload', (req, res) => {
 		response.on("data", data => { body += data });
 		response.on("end", () => {
 			body = JSON.parse(body);
-		
+			
+			// if(~body.resultMap.RETURNS) return;
 			// Done fetching the data, operate on data and return the different graph datas
 
 			// console.log(body.resultMap);
+			var TADecisions = [];
 			graphCompanies = body.resultMap.RETURNS.map(function(returns, l) {
 				var levels = returns.performanceChart.map(function(point) { return [point[0], point[1] * 1]; });
 				var ema12 = movingAverage(12, levels);
@@ -136,22 +136,22 @@ app.post('/upload', (req, res) => {
 
 				if(levels[levels.length-1][1] < confIntMinus[confIntMinus.length-1][1])
 				{
-					decisions = 1;
+					TADecisions[l] = 1;
 				} else if(levels[levels.length-1][1] > confIntPlus[confIntPlus.length-1][1])
 				{
-					decisions = -1;
+					TADecisions[l] = -1;
 				} else {
-					decisions = 0;
+					TADecisions[l] = 0;
 				}
 
 				if(Math.abs(macd[macd.length-1][1] - ema9mac[ema9mac.length-1][1]) >= 0.1)
 				{
-					decisions += 0;
+					TADecisions[l] += 0;
 				} else {
 					if(macd[macd.length-2][1] > ema9mac[ema9mac.length-2][1])
-						decisions += 1;
+						TADecisions[l] += 1;
 					else
-						decisions += -1;
+						TADecisions[l] += -1;
 				}
 
 				return [
@@ -200,11 +200,26 @@ app.post('/upload', (req, res) => {
 			// console.log(JSON.stringify(graphCompanies[0]));
 			// console.log(graphCompanies[0][2][0].interval);
 			//res.render("graph", {ss: graphCompanies, dec: decisions});
-			res.render("analysis", {graphs: graphCompanies, });
-		});
+			var arrDecisions = [];
+			for(var i = 0; i < companyNames.length; i++)
+			{
+				if(TADecisions[i] > 0)
+					arrDecisions[i] = 'SELL';
+				else if(TADecisions[i] < 0)
+					arrDecisions[i] = 'BUY';
+				else
+					arrDecisions[i] = 'HOLD';
+			}
+			var nameData = {
+				names: companyNames,
+				decision: arrDecisions
+			};
+			res.render("analysis", {graphs: graphCompanies, nameDatas: nameData});
+	});
 
 		
 	});
+
 });
 
 // // // // // Functions // // // // //
