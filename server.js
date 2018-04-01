@@ -182,15 +182,16 @@ app.post('/upload', (req, res) => {
 			});
 			// console.log(JSON.stringify(graphCompanies[0]));
 			// console.log(graphCompanies[0][2][0].interval);
-			res.render("graph", {ss: graphCompanies, dec: decisions});
+			//res.render("graph", {ss: graphCompanies, dec: decisions});
+			res.render("analysis", {graphs: graphCompanies});
 		});
 
 		
 	});
 
 	console.log(req.body);
-	// res.render("analysis");
-	getTweets(companies);
+	
+	//getTweets(companies);
 });
 
 // // // // // Functions // // // // //
