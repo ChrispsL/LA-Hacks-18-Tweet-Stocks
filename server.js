@@ -20,14 +20,14 @@ app.use(express.static('public'));	// serve our static CSS, JS
 
 // // // Globals // // //
 const warningThreshold = 0.5;	// If score changes by this amount, alert the user
-var companies = new Array();
+// var companies = new Array();
 var total_sentiments = new Array();
 
 // // // // // Routers // // // // //
 
 // Homepage index
 app.get('/', (req, res) => {
-	res.render("index", {title: "Stocks"});
+	res.render("index", {title: "ENTER YOUR WATCHLIST"});
 });
 
 // Call on "add" button click to serve a new-line on the form (should we be doing this on the client?)
@@ -71,7 +71,7 @@ app.post('/upload', (req, res) => {
 	var graphCompanies;
 
 	var performanceURL = 'https://www.blackrock.com/tools/hackathon/performance?identifiers='
-	performanceURL += companies.join(',') + '&endDate=20170313';
+	performanceURL += companies.join(',');
 	// console.log(performanceURL);
 	https.get(performanceURL, (response) => {
 		response.setEncoding('utf8');
@@ -188,141 +188,24 @@ app.post('/upload', (req, res) => {
 		
 	});
 
-
-
-	// var ss = {
-	// 	name: graphCompanies.name,
-	// 	data: {
-	// 	graphCompanies.data.levels,
-	// 	graphCompanies.data.ema5,
-	// 	graphCompanies.data.ema14
-	// },
-	// tooltip: { valueDecimals: 2 }
-	// }
-	// res.render("graph", {ss});
-
-	// https.get(analysisURL, (res) => {
-	// 	  res.setEncoding('utf8');
-	// 	  let body = "";
-	// 	  res.on("data", data => { body += data });
-	// 	  res.on("end", () => {
-	// 	  	body = JSON.parse(body);
-			
-	// 		var portfolio = body['resultMap']['PORTFOLIOS'][0]['portfolios'];
-	// 		if(portfolio[0].allDataReturned == false) {
-	// 			console.log("Invalid!");
-	// 		} else {
-	// 		//console.log(portfolio[0]);
-	// 		//console.log(portfolio[0]['returns']);
-	// 		//console.log(portfolio[0]['returns']['returnsMap']['20180325']);
-	// 		// console.log(portfolio[0]['request']);
-	// 		// console.log(portfolio[0]['exposure']);
-	// 		// console.log(portfolio[0]);
-	// 		}
-	// 	//console.log(body['resultMap']['SEARCH_RESULTS'][0]);
-	// 		for (var k = 0; k < num_companies; k++){
-	// 			var company = portfolio[0]['holdings'][k]['description'];
-	// 			companies.push(company);
-	// 			console.log("COMPANY " + k + " " + company);
-	//     	}
-	// 		getTweets();
-	// 	  });
- //    });
+	console.log(req.body);
+	// res.render("analysis");
+	getTweets(companies);
 });
-
-
-app.get('/ema', (req, res) => {
-	var performanceURL = 'https://www.blackrock.com/tools/hackathon/performance?identifiers=AMZN'
-	// var performanceURL = 'https://www.blackrock.com/tools/hackathon/portfolio-analysis?positions=AAPL~50|MSFT~50'
-	https.get(performanceURL, (response) => {
-		response.setEncoding('utf8');
-		let body = "";
-		response.on("data", data => { body += data });
-		response.on("end", () => {
-			body = JSON.parse(body);
-			
-			var returns = body.resultMap.RETURNS;
-			console.log(returns);
-			var levels = returns[0].performanceChart.map(function(point) {
-			  				return [point[0], point[1] * 10000]; });
-			var ema5 = movingAverage(5, levels);
-			var ema14 = movingAverage(14, levels);
-			var macd = ema14.map(function(point, i) {
-				return [point[0], ema5[i][1] - point[1]];
-			});
-			var ss = [{
-			  			name: "AMZ Plain",
-			  			data: levels,
-			  			tooltip: { valueDecimals: 2 }
-			  		}, {
-			  			name: "AMZN EMA 5",
-			  			data: ema5,
-			  			tooltip: { valueDecimals: 2 }
-			  		}, {
-			  			name: "AMZN EMA 14",
-			  			data: ema14,
-			  			tooltip: { valueDecimals: 2 }
-			  		}];
-			 var ss2 = [{
-			  			name: "AMZN MACD",
-			  			data: macd,
-			  			tooltip: { valueDecimals: 2 }
-			  		}];
-			res.render("graph", {ss, ss2});
-		});
-	});
-});
-
-app.get('/ema2', (req, res) => {
-	var performanceURL = 'https://www.blackrock.com/tools/hackathon/portfolio-analysis?positions=AAPL~50|MSFT~50&monthsUntilRebalance=50000&useStandardQuarterlyRebalance=false&useStandardYearlyRebalance=false'
-	https.get(performanceURL, (response) => {
-		response.setEncoding('utf8');
-		let body = "";
-		response.on("data", data => { body += data });
-		response.on("end", () => {
-			body = JSON.parse(body);
-			// console.log(body.resultMap.PORTFOLIOS[0].portfolios);
-			var positionName = "";
-
-			
-			var returns = body.resultMap.PORTFOLIOS[0].portfolios[0].returns;
-			var levels = returns.performanceChart.map(function(point) {
-			  				return [point[0], point[1] * 10000]; });
-			var ema5 = movingAverage(5, levels);
-			var ema14 = movingAverage(14, levels);
-			var macd = ema14.map(function(point, i) {
-				return [point[0], ema5[i][1] - point[1]];
-			});
-			var ss = [{
-			  			name: "AAPL MSFT Plain",
-			  			data: levels,
-			  			tooltip: { valueDecimals: 2 }
-			  		}, {
-			  			name: "AAPL MSFT EMA 5",
-			  			data: ema5,
-			  			tooltip: { valueDecimals: 2 }
-			  		}, {
-			  			name: "AAPL MSFT EMA 14",
-			  			data: ema14,
-			  			tooltip: { valueDecimals: 2 }
-			  		}, {
-			  			name: "AAPL MSFT MACD",
-			  			data: macd,
-			  			tooltip: { valueDecimals: 2 }
-			  		}]
-			res.render("graph", {ss});
-			// console.log(ss);
-		});
-	});
-});
-
-
 
 // // // // // Functions // // // // //
 
-function getTweets(){
+var iteration = 0;
+function getTweets(companies){
+	console.log(companies.length);
 	for (var k = 0; k < companies.length; k++){
-		T.get('search/tweets', { q: companies[k] + ' since:2018-03-24', count: 100}, (err, data, response) => {
+		console.log("SEARCHING TWITTER FOR " + companies[k]);
+		console.log( moment().subtract(7, 'd').format('YYYY-MM-DD'));
+		T.get('search/tweets', { q: companies[k] + ' since:' + moment().subtract(7, 'd').format('YYYY-MM-DD'), count: 100}, (err, data, response) => {
+			console.log(" ");
+			console.log("ITERATION NUMBER " + iteration + " WITH " + data.statuses.length + " TWEETS");
+			console.log(" ");
+			iteration++;
 			for(var i=0; i < data.statuses.length; i++)
 			{
 				//filter for english only posts
@@ -349,84 +232,8 @@ function getTweets(){
 		//total_sentiments[k] = total_sentiment;
 		})
 	}
-	setTimeout(getTweets, 20000);
+	setTimeout(function(){getTweets(companies);}, 20000);
 };
-
-function getGraphData(companies)
-{
-	var performanceURL = 'https://www.blackrock.com/tools/hackathon/performance?identifiers='
-	performanceURL += companies.join(',');
-	console.log(performanceURL);
-
-	https.get(performanceURL, (res) => {
-		res.setEncoding('utf8');
-		let body = "";
-		res.on("data", data => { body += data });
-		res.on("end", () => {
-			body = JSON.parse(body);
-		
-			// Done fetching the data, operate on data and return the different graph datas
-
-			console.log(body.resultMap);
-			var graphCompanies = body.resultMap.RETURNS.map(function(returns) {
-				var stockData = returns.performanceChart.map(function(point) { return [point[0], point[1] * 10000]; });
-				var calcEma5 = movingAverage(5, stockData);
-				var calcEma14 = movingAverage(14, stockData);
-				var calcMacd = calcEma14.map(function(point, i) { return [point[0], calcEma5[i][1] - point[1]]; });
-
-				var confIntVal = 0;
-				for (var i = 0; i < stockData.length; i++) {
-					confIntVal += stockData[i][1];
-				}
-				confIntVal /= (stockData.length * 20);	// 5% of average stock data
-				var calcConfIntPlus = calcEma14.map(function(point, i) { return [point[0], point[1] + confIntVal]});
-				var calcConfIntMinus = calcEma14.map(function(point, i) { return [point[0], point[1] - confIntVal]});
-
-				return {
-					name: returns.ticker,
-					data: [{
-						levels: stockData,
-						ema5: calcEma5,
-						ema14: calcEma14,
-						macd: calcMacd,
-						confIntP: calcConfIntPlus,
-						confIntM: calcConfIntMinus,
-					}],
-					tooltip: { valueDecimals: 2 }
-				};
-			});
-			return graphCompanies;
-		// 	console.log(returns);
-		// 	var levels = returns[0].performanceChart.map(function(point) {
-		// 	  				return [point[0], point[1] * 10000]; });
-		// 	var ema5 = movingAverage(5, levels);
-		// 	var ema14 = movingAverage(14, levels);
-		// 	var macd = ema14.map(function(point, i) {
-		// 		return [point[0], ema5[i][1] - point[1]];
-		// 	});
-		// 	var ss = [{
-		// 	  			name: "AMZ Plain",
-		// 	  			data: levels,
-		// 	  			tooltip: { valueDecimals: 2 }
-		// 	  		}, {
-		// 	  			name: "AMZN EMA 5",
-		// 	  			data: ema5,
-		// 	  			tooltip: { valueDecimals: 2 }
-		// 	  		}, {
-		// 	  			name: "AMZN EMA 14",
-		// 	  			data: ema14,
-		// 	  			tooltip: { valueDecimals: 2 }
-		// 	  		}];
-		// 	 var ss2 = [{
-		// 	  			name: "AMZN MACD",
-		// 	  			data: macd,
-		// 	  			tooltip: { valueDecimals: 2 }
-		// 	  		}];
-		// 	res.render("graph", {ss, ss2});
-		// });
-	});
-	});
-}
 
 function movingAverage(period, data)
 {

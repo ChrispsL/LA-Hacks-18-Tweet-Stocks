@@ -1,3 +1,70 @@
+@font-face{font-family: 'MyriadPro'; src: url(/MyriadPro-Regular.otf) format('opentype');}
+@font-face{font-family: 'CenturyGothic'; src: url(/CenturyGothic.ttf) format('truetype');}
+
 body{
-	background: yellow;
+	margin-top: 10%;
+	font-family: "MyriadPro";
+	overflow: hidden;
+}
+
+.bg{
+	position: absolute;
+	top: 0%;
+	width: 100%;
+	z-index: -1;
+}
+
+h2{
+	font-family: "CenturyGothic";
+	letter-spacing: 12px;
+	font-size: 40px;
+}
+
+hr{
+	border: none;
+    height: 1px;
+    /* Set the hr color */
+    color: #333; /* old IE */
+    background-color: #333; /* Modern Browsers */
+}
+
+.container{
+	font-size: 20px;
+}
+
+#submit{
+  	border-width: 2px;
+  	border-color: #555;
+	background: #555;
+	-webkit-transition: all 0.5s ease-out;
+	-moz-transition: all 0.5s ease-out;
+	-o-transition: all 0.5s ease-out;
+	-ms-transition: all 0.5s ease-out;
+	transition: 0.5s ease;
+}
+
+#submit:hover{
+  	border-color: #999;
+	background: #999;
+}
+
+.empty{
+	border-width: 2px;
+	border-color: #555;
+	background-color: Transparent;
+	color: #555;
+	-webkit-transition: all 0.4s ease-out;
+	-moz-transition: all 0.4s ease-out;
+	-o-transition: all 0.4s ease-out;
+	-ms-transition: all 0.4s ease-out;
+	transition: 0.4s ease;
+}
+
+.empty:hover{
+	border-color: #999;
+	color: #999;
+}
+
+.form-control{
+  color: black;
 }
